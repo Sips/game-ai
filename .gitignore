@@ -1,3 +1,16 @@
+.classpath
+.project
+.settings/**
+
+# IntelliJ:
+*.iml
+.idea
+
+# Log files:
+logs
+**/*.log
+
+# Maven:
 target/
 pom.xml.tag
 pom.xml.releaseBackup
