@@ -1,4 +1,5 @@
 language: java
 
-#jdk:
-#  - oraclejdk8
+# To start with, just target JDK 8:
+jdk:
+  - oraclejdk8
