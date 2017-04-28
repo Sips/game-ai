@@ -1,7 +1,6 @@
 package io.github.ddebree.game.ai.tictactoe;
 
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Maps;
 import io.github.ddebree.game.ai.core.player.TwoPlayerKey;
 
 import java.util.*;
@@ -19,16 +18,6 @@ public class State {
 
     public State(Map<Move, TwoPlayerKey> occupiedPoints) {
         this.occupiedPoints = ImmutableMap.copyOf(occupiedPoints);
-    }
-
-    public State placeAMove(Move move, TwoPlayerKey player) {
-        Map<Move, TwoPlayerKey> newOccupiedPoints = Maps.newHashMap(occupiedPoints);
-        if (player == null) {
-            newOccupiedPoints.remove(move);
-        } else {
-            newOccupiedPoints.put(move, player);   //player = TwoPlayer.PLAYER_1 for X, TwoPlayer.PLAYER_2 for O
-        }
-        return new State(newOccupiedPoints);
     }
 
     @Override

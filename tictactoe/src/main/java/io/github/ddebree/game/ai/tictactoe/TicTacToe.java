@@ -7,11 +7,12 @@ import io.github.ddebree.game.ai.core.strategy.prompt.PromptUserStrategy;
 
 import java.util.Scanner;
 
-public class TicTacToe extends TurnBasedLoopingGameExecutor<State, Move> {
+public class TicTacToe {
 
     public static void main(String[] args) {
-        new TicTacToe()
+        new TurnBasedLoopingGameExecutor<State, Move>()
                 .withStateReader(State::new)
+                .withNextStateBuilder(new NextStateBuilder())
                 .withPlayer1Executor(PlayerExecutor.<State, TwoPlayerKey, Move>aPlayerExecutor(TwoPlayerKey.PLAYER_1, "Computer Player")
                         .withStrategy(new BoardMinMax())
                 )
@@ -25,11 +26,6 @@ public class TicTacToe extends TurnBasedLoopingGameExecutor<State, Move> {
                 )
                 .withGameOverTester(new GameOverTester())
                 .run();
-    }
-
-    @Override
-    protected State placeMove(State state, Move userMove, TwoPlayerKey turn) {
-        return state.placeAMove(userMove, turn);
     }
 
 }

@@ -1,8 +1,10 @@
 package io.github.ddebree.game.ai.core.executor;
 
+import io.github.ddebree.game.ai.core.exception.InvalidMoveException;
 import io.github.ddebree.game.ai.core.player.TwoPlayerKey;
 import io.github.ddebree.game.ai.core.executor.gameover.IGameOverTester;
 import io.github.ddebree.game.ai.core.executor.player.PlayerExecutor;
+import io.github.ddebree.game.ai.core.state.INextStateBuilder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -11,20 +13,20 @@ import java.util.function.Supplier;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-public abstract class TurnBasedLoopingGameExecutor<S, M> implements Runnable {
+public class TurnBasedLoopingGameExecutor<S, M> implements Runnable {
 
     private static final Logger LOG = LogManager.getLogger(TurnBasedLoopingGameExecutor.class);
 
     private Supplier<? extends S> stateReader;
     private Supplier<TwoPlayerKey> firstPlayerSelector = () -> TwoPlayerKey.PLAYER_1;
+    private INextStateBuilder<S, TwoPlayerKey, M> nextStateBuilder;
     private Map<TwoPlayerKey, PlayerExecutor<S, TwoPlayerKey, M>> players = new HashMap<>();
     private IGameOverTester<S, TwoPlayerKey> gameOverTester;
     private int loopLimit = Integer.MAX_VALUE;
 
-    protected abstract S placeMove(S state, M move, TwoPlayerKey turn);
-
     public void run() {
         checkNotNull(stateReader);
+        checkNotNull(nextStateBuilder);
 
         long startTime = System.currentTimeMillis();
 
@@ -45,7 +47,11 @@ public abstract class TurnBasedLoopingGameExecutor<S, M> implements Runnable {
 
             M move = players.get(turn).getMove(state);
 
-            state = placeMove(state, move, turn);
+            try {
+                state = nextStateBuilder.buildNextState(state, turn, move);
+            } catch (InvalidMoveException e) {
+                throw new RuntimeException(e);
+            }
 
             turn = turn.otherPlayer();
         }
@@ -78,6 +84,11 @@ public abstract class TurnBasedLoopingGameExecutor<S, M> implements Runnable {
 
     public TurnBasedLoopingGameExecutor<S, M> withPlayer2Executor(PlayerExecutor<S, TwoPlayerKey, M> player2Player) {
         this.players.put(TwoPlayerKey.PLAYER_2, player2Player);
+        return this;
+    }
+
+    public TurnBasedLoopingGameExecutor<S, M> withNextStateBuilder(INextStateBuilder<S, TwoPlayerKey, M> nextStateBuilder) {
+        this.nextStateBuilder = nextStateBuilder;
         return this;
     }
 

@@ -1,10 +1,13 @@
 package io.github.ddebree.game.ai.tictactoe;
 
+import io.github.ddebree.game.ai.core.exception.InvalidMoveException;
 import io.github.ddebree.game.ai.core.executor.gameover.IGameOverTester;
 import io.github.ddebree.game.ai.core.move.IMoveFactory;
 import io.github.ddebree.game.ai.core.player.TwoPlayerKey;
 import io.github.ddebree.game.ai.core.score.MaxScoreMoves;
 import io.github.ddebree.game.ai.core.strategy.IStrategy;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 import java.util.Optional;
@@ -15,8 +18,11 @@ import static com.google.common.base.Preconditions.checkArgument;
 
 public class BoardMinMax implements IStrategy<State, TwoPlayerKey, Move> {
 
+    private static final Logger LOG = LogManager.getLogger(BoardMinMax.class);
+
     private IMoveFactory<State, TwoPlayerKey, Move> moveFactory = new MoveFactory();
     private IGameOverTester<State, TwoPlayerKey> gameOverTester = new GameOverTester();
+    private NextStateBuilder nextStateBuilder = new NextStateBuilder();
 
     @Nonnull
     @Override
@@ -28,25 +34,38 @@ public class BoardMinMax implements IStrategy<State, TwoPlayerKey, Move> {
         MaxScoreMoves<Move> bestMoves = new MaxScoreMoves<>();
 
         moveFactory.getMoves(board, maximizingPlayer).forEach(move -> {
-            State newBoard = board.placeAMove(move, maximizingPlayer);
-            int currentScore = minimax(newBoard, 1, false, maximizingPlayer);
+            try {
+                State newBoard = nextStateBuilder.buildNextState(board, maximizingPlayer, move);
 
-            bestMoves.addMove(move, currentScore);
+                int currentScore = minimax(newBoard, 1, false, maximizingPlayer);
 
-            System.out.println("Score for move " + move + " = " + currentScore);
+                bestMoves.addMove(move, currentScore);
+
+                LOG.info("Score for move {} = {}", move, currentScore);
+            } catch (InvalidMoveException e) {
+                throw new RuntimeException(e);
+            }
         });
         return bestMoves.getMoves().stream();
     }
 
-    private int minimax(State board, int depth, boolean isMaximiser, final TwoPlayerKey maximizingPlayer) {
+    private int minimax(State board, int depth, final boolean isMaximiser, final TwoPlayerKey maximizingPlayer) {
         checkArgument(depth > 0);
 
         if (gameOverTester.isGameOver(board)) {
             return scoreState(board, maximizingPlayer);
         }
 
-        IntStream scores = moveFactory.getMoves(board, isMaximiser ? maximizingPlayer : maximizingPlayer.otherPlayer()).mapToInt(move -> {
-            State newBoard = board.placeAMove(move, isMaximiser ? maximizingPlayer : maximizingPlayer.otherPlayer());
+        final TwoPlayerKey keyToGetMovesFor = isMaximiser ? maximizingPlayer : maximizingPlayer.otherPlayer();
+        IntStream scores = moveFactory.getMoves(board, keyToGetMovesFor).mapToInt(move -> {
+            State newBoard = null;
+            try {
+                newBoard = nextStateBuilder.buildNextState(board,
+                        keyToGetMovesFor,
+                        move);
+            } catch (InvalidMoveException e) {
+                throw new RuntimeException(e);
+            }
             return minimax(newBoard, depth + 1, !isMaximiser, maximizingPlayer);
         });
 

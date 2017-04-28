@@ -6,11 +6,12 @@ import io.github.ddebree.game.ai.core.player.TwoPlayerKey;
 
 import java.util.Random;
 
-public class SelfRunningTicTacToe extends TurnBasedLoopingGameExecutor<State, Move> {
+public class SelfRunningTicTacToe {
 
     public static void main(String[] args) {
-        new SelfRunningTicTacToe()
+        new TurnBasedLoopingGameExecutor<State, Move>()
                 .withStateReader(State::new)
+                .withNextStateBuilder(new NextStateBuilder())
                 .withPlayer1Executor(PlayerExecutor.<State, TwoPlayerKey, Move>aPlayerExecutor(TwoPlayerKey.PLAYER_1, "Player 1")
                         .withStrategy(new BoardMinMax())
                 )
@@ -21,11 +22,6 @@ public class SelfRunningTicTacToe extends TurnBasedLoopingGameExecutor<State, Mo
                 )
                 .withGameOverTester(new GameOverTester())
                 .run();
-    }
-
-    @Override
-    protected State placeMove(State state, Move userMove, TwoPlayerKey turn) {
-        return state.placeAMove(userMove, turn);
     }
 
 }
