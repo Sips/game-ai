@@ -22,6 +22,8 @@
 
     <modules>
         <module>core</module>
+        <module>board</module>
+        <module>tictactoe</module>
     </modules>
 
     <dependencies>
