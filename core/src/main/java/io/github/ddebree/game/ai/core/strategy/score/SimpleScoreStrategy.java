@@ -17,21 +17,22 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * A very simple strategy that looks one move in advance and picks the
  * one that results in the highest score
  *
- * @param <S> The state object
- * @param <M> The move object
+ * @param <S> The class that represents a game's state
+ * @param <P> The class that represents a key to the current player
+ * @param <M> The class used to represent a player's move
  */
-public class SimpleScoreStrategy<S, PK, M> implements IStrategy<S, PK, M> {
+public class SimpleScoreStrategy<S, P, M> implements IStrategy<S, P, M> {
 
     @Nonnull
-    private final IMoveFactory<S, PK, M> moveFactory;
+    private final IMoveFactory<S, P, M> moveFactory;
     @Nonnull
-    private final INextStateBuilder<S, PK, M> nextStateFactory;
+    private final INextStateBuilder<S, P, M> nextStateFactory;
     @Nonnull
-    private final IStateScorer<S, PK> stateScorer;
+    private final IStateScorer<S, P> stateScorer;
 
-    public SimpleScoreStrategy(@Nonnull final IMoveFactory<S, PK, M> moveFactory,
-                                  @Nonnull final IStateScorer<S, PK> stateScorer,
-                                  @Nonnull final INextStateBuilder<S, PK, M> nextStateFactory) {
+    public SimpleScoreStrategy(@Nonnull final IMoveFactory<S, P, M> moveFactory,
+                                  @Nonnull final IStateScorer<S, P> stateScorer,
+                                  @Nonnull final INextStateBuilder<S, P, M> nextStateFactory) {
         this.moveFactory = checkNotNull(moveFactory);
         this.nextStateFactory = checkNotNull(nextStateFactory);
         this.stateScorer = checkNotNull(stateScorer);
@@ -39,7 +40,7 @@ public class SimpleScoreStrategy<S, PK, M> implements IStrategy<S, PK, M> {
 
     @Nonnull
     @Override
-    public Stream<M> getBestMoves(@Nonnull S state, PK playerKey) {
+    public Stream<M> getBestMoves(@Nonnull S state, P playerKey) {
         final MinMaxScore.Builder<M> results = MinMaxScore.builder();
         moveFactory.getMoves(state, playerKey).forEach(
                 move -> {

@@ -16,8 +16,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * A strategy that scores based on the move itself, without any real
  * knowledge of what the future state looks like
  *
- * @param <S> The state object
- * @param <M> The move object
+ * @param <S> The class that represents a game's state
+ * @param <P> The class that represents a key to the current player
+ * @param <M> The class used to represent a player's move
  */
 public class MoveScoreStrategy<S, P, M> implements IStrategy<S, P, M> {
 
