@@ -10,7 +10,7 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>tictactoe</artifactId>
+    <artifactId>game-ai-tictactoe</artifactId>
     <name>Game AI - TicTacToe</name>
 
     <dependencies>
