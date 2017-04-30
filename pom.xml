@@ -23,6 +23,7 @@
     <modules>
         <module>core</module>
         <module>board</module>
+        <module>concurrent</module>
         <module>tictactoe</module>
     </modules>
 
