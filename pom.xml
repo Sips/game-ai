@@ -9,9 +9,9 @@
         <relativePath/>
     </parent>
 
-    <groupId>io.github.ddebree.game.ai</groupId>
+    <groupId>io.github.ddebree</groupId>
     <artifactId>game-ai</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>0.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>Game AI Parent Pom</name>
