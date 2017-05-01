@@ -11,8 +11,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Set;
 import java.util.stream.Stream;
 
 import static org.junit.Assert.*;
@@ -52,7 +51,7 @@ public class SimpleScoreStrategyTest {
     public void testGetBestMove_NoMoves() throws Exception {
         when(moveFactory.getMoves(currentState, playerKey)).thenReturn(Stream.empty());
 
-        List<IMove> moves = simpleScoreStrategy.getBestMoves(currentState, playerKey).collect(Collectors.toList());
+        Set<IMove> moves = simpleScoreStrategy.getBestMoves(currentState, playerKey);
 
         assertTrue(moves.isEmpty());
     }
@@ -63,7 +62,7 @@ public class SimpleScoreStrategyTest {
         when(nextStateBuilder.buildNextState(currentState, playerKey, move1)).thenReturn(state1);
         when(stateScorer.scoreState(state1, playerKey)).thenReturn(123);
 
-        List<IMove> moves = simpleScoreStrategy.getBestMoves(currentState, playerKey).collect(Collectors.toList());
+        Set<IMove> moves = simpleScoreStrategy.getBestMoves(currentState, playerKey);
 
         assertEquals(1, moves.size());
         assertTrue(moves.contains(move1));
@@ -81,7 +80,7 @@ public class SimpleScoreStrategyTest {
         when(stateScorer.scoreState(state1, playerKey)).thenReturn(123);
         when(stateScorer.scoreState(state2, playerKey)).thenReturn(123);
 
-        List<IMove> moves = simpleScoreStrategy.getBestMoves(currentState, playerKey).collect(Collectors.toList());
+        Set<IMove> moves = simpleScoreStrategy.getBestMoves(currentState, playerKey);
 
         assertEquals(2, moves.size());
         assertEquals(ImmutableSet.copyOf(moves), ImmutableSet.of(move1, move2));
@@ -101,7 +100,7 @@ public class SimpleScoreStrategyTest {
         when(stateScorer.scoreState(state1, playerKey)).thenReturn(123);
         when(stateScorer.scoreState(state2, playerKey)).thenReturn(321);
 
-        List<IMove> moves = simpleScoreStrategy.getBestMoves(currentState, playerKey).collect(Collectors.toList());
+        Set<IMove> moves = simpleScoreStrategy.getBestMoves(currentState, playerKey);
 
         assertEquals(1, moves.size());
         assertTrue(moves.contains(move2));
@@ -120,7 +119,7 @@ public class SimpleScoreStrategyTest {
         when(nextStateBuilder.buildNextState(currentState, playerKey, move2)).thenThrow(InvalidMoveException.INSTANCE);
         when(stateScorer.scoreState(state1, playerKey)).thenReturn(123);
 
-        List<IMove> moves = simpleScoreStrategy.getBestMoves(currentState, playerKey).collect(Collectors.toList());
+        Set<IMove> moves = simpleScoreStrategy.getBestMoves(currentState, playerKey);
 
         assertEquals(1, moves.size());
         assertTrue(moves.contains(move1));

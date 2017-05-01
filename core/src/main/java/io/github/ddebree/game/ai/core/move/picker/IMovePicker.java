@@ -1,7 +1,7 @@
 package io.github.ddebree.game.ai.core.move.picker;
 
 import javax.annotation.Nonnull;
-import java.util.stream.Stream;
+import java.util.Set;
 
 /**
  * Class to pick a single move from a series of possible moves provided by the strategy
@@ -12,6 +12,6 @@ import java.util.stream.Stream;
 public interface IMovePicker<S, M> {
 
     @Nonnull
-    M pickAMove(S state, Stream<M> moves);
+    M pickAMove(S state, Set<M> moves);
 
 }

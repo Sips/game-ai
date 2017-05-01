@@ -5,7 +5,8 @@ import io.github.ddebree.game.ai.core.strategy.IStrategy;
 
 import javax.annotation.Nonnull;
 
-import java.util.stream.Stream;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -27,8 +28,8 @@ public class AllMovesStrategy<S, P, M> implements IStrategy<S, P, M> {
 
     @Nonnull
     @Override
-    public Stream<M> getBestMoves(@Nonnull S state, @Nonnull P player) {
-        return moveFactory.getMoves(state, player);
+    public Set<M> getBestMoves(@Nonnull S state, @Nonnull P player) {
+        return moveFactory.getMoves(state, player).collect(Collectors.toSet());
     }
 
     @Override

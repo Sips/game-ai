@@ -1,11 +1,12 @@
 package io.github.ddebree.game.ai.core.move.picker;
 
+import com.google.common.collect.Lists;
+
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.Set;
 
 /**
  * Randomly select a move, but weight some moves above others
@@ -20,8 +21,8 @@ public abstract class WeightedMovePicker<S, M> implements IMovePicker<S, M> {
     private final Random random = new Random();
 
     @Nonnull
-    public M pickAMove(S state, Stream<M> bestMovesStream) {
-        List<M> bestMoves = bestMovesStream.collect(Collectors.toList());
+    public M pickAMove(S state, Set<M> bestMovesSet) {
+        List<M> bestMoves = Lists.newArrayList(bestMovesSet);
         if (bestMoves.isEmpty()) {
             throw new RuntimeException("No moves to select from!");
         } else if (bestMoves.size() == 1) {

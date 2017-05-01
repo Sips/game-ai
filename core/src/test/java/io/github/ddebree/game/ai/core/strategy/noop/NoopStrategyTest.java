@@ -5,8 +5,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Set;
 
 import static org.junit.Assert.*;
 
@@ -27,7 +26,7 @@ public class NoopStrategyTest {
     @Test
     public void testGetBestMaximiserMove_noNextStateFactory() {
         NoopStrategy<IState, IPlayerKey, IMove> toTest = new NoopStrategy<>();
-        List<IMove> result = toTest.getBestMoves(state, playerKey).collect(Collectors.toList());
+        Set<IMove> result = toTest.getBestMoves(state, playerKey);
         assertTrue(result.isEmpty());
     }
 

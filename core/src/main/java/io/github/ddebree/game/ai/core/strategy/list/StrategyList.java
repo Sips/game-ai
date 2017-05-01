@@ -2,6 +2,7 @@ package io.github.ddebree.game.ai.core.strategy.list;
 
 import com.google.common.collect.ImmutableList;
 
+import com.google.common.collect.ImmutableSet;
 import io.github.ddebree.game.ai.core.strategy.IStrategy;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -9,9 +10,7 @@ import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -47,17 +46,17 @@ public class StrategyList<S, P, M> implements IStrategy<S, P, M> {
 
     @Nonnull
     @Override
-    public Stream<M> getBestMoves(@Nonnull final S state, P playerKey) {
+    public Set<M> getBestMoves(@Nonnull final S state, P playerKey) {
         for (IStrategy<S, P, M> strategy : strategies) {
-            List<M> moves = strategy.getBestMoves(state, playerKey).collect(Collectors.toList());
+            Set<M> moves = strategy.getBestMoves(state, playerKey);
             if ( ! moves.isEmpty()) {
                 LOG.info("Strategy {} returned a result. Using it", strategy);
-                return moves.stream();
+                return moves;
             } else {
                 LOG.info("Strategy {} returned nothing. Moving on to next strategy", strategy);
             }
         }
-        return Stream.empty();
+        return ImmutableSet.of();
     }
     
 }

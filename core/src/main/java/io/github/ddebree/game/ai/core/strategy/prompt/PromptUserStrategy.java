@@ -5,10 +5,11 @@ import io.github.ddebree.game.ai.core.move.MoveFactoryBuilder;
 import io.github.ddebree.game.ai.core.strategy.IStrategy;
 
 import javax.annotation.Nonnull;
+import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
+import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class PromptUserStrategy<S, P, M> implements IStrategy<S, P, M> {
 
@@ -21,7 +22,7 @@ public class PromptUserStrategy<S, P, M> implements IStrategy<S, P, M> {
 
     @Nonnull
     @Override
-    public Stream<M> getBestMoves(@Nonnull S state, P playerKey) {
+    public Set<M> getBestMoves(@Nonnull S state, P playerKey) {
         List<M> moves = moveFactory.getMoves(state, playerKey).collect(Collectors.toList());
         System.out.println("Select a move:");
         int i = 0;
@@ -30,7 +31,7 @@ public class PromptUserStrategy<S, P, M> implements IStrategy<S, P, M> {
             i++;
         }
         System.out.println("Select an available option");
-        return Stream.of(moves.get(scan.nextInt()));
+        return Collections.singleton(moves.get(scan.nextInt()));
     }
 
 }

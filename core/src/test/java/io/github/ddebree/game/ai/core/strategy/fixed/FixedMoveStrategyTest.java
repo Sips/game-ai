@@ -7,8 +7,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.Collections;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.Set;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
@@ -33,26 +32,26 @@ public class FixedMoveStrategyTest {
     @Test
     public void testGetBestMaximiserMove_noNextStateFactory() {
         FixedMoveStrategy<IState, IPlayerKey, IMove> toTest = new FixedMoveStrategy<>(move);
-        Stream<IMove> result = toTest.getBestMoves(state, playerKey);
-        assertEquals(Collections.singletonList(move), result.collect(Collectors.toList()));
+        Set<IMove> result = toTest.getBestMoves(state, playerKey);
+        assertEquals(Collections.singleton(move), result);
     }
 
     @Test
     public void testGetBestMaximiserMove_passingNextStateFactory() {
         FixedMoveStrategy<IState, IPlayerKey, IMove> toTest = new FixedMoveStrategy<>(move, hasNextStateTester);
         when(hasNextStateTester.isValidMove(state, playerKey, move)).thenReturn(true);
-        Stream<IMove> result = toTest.getBestMoves(state, playerKey);
+        Set<IMove> result = toTest.getBestMoves(state, playerKey);
 
-        assertEquals(Collections.singletonList(move), result.collect(Collectors.toList()));
+        assertEquals(Collections.singleton(move), result);
     }
 
     @Test
     public void testGetBestMaximiserMove_failingNextStateFactory() {
         FixedMoveStrategy<IState, IPlayerKey, IMove> toTest = new FixedMoveStrategy<>(move, hasNextStateTester);
         when(hasNextStateTester.isValidMove(state, playerKey, move)).thenReturn(false);
-        Stream<IMove> result = toTest.getBestMoves(state, playerKey);
+        Set<IMove> result = toTest.getBestMoves(state, playerKey);
 
-        assertTrue(result.collect(Collectors.toList()).isEmpty());
+        assertTrue(result.isEmpty());
     }
 
 }

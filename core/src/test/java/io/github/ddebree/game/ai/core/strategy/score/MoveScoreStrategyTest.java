@@ -10,8 +10,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Set;
 import java.util.stream.Stream;
 
 import static org.junit.Assert.assertEquals;
@@ -48,7 +47,7 @@ public class MoveScoreStrategyTest {
     public void testGetBestMove_NoMoves() throws Exception {
         when(moveFactory.getMoves(currentState, playerKey)).thenReturn(Stream.empty());
 
-        List<IMove> moves = moveMoveScoreStrategy.getBestMoves(currentState, playerKey).collect(Collectors.toList());
+        Set<IMove> moves = moveMoveScoreStrategy.getBestMoves(currentState, playerKey);
 
         assertTrue(moves.isEmpty());
     }
@@ -58,7 +57,7 @@ public class MoveScoreStrategyTest {
         when(moveFactory.getMoves(currentState, playerKey)).thenReturn(Stream.of(move1));
         when(moveScorer.scoreMove(currentState, move1)).thenReturn(123);
 
-        List<IMove> moves = moveMoveScoreStrategy.getBestMoves(currentState, playerKey).collect(Collectors.toList());
+        Set<IMove> moves = moveMoveScoreStrategy.getBestMoves(currentState, playerKey);
 
         assertEquals(1, moves.size());
         assertTrue(moves.contains(move1));
@@ -73,7 +72,7 @@ public class MoveScoreStrategyTest {
         when(moveScorer.scoreMove(currentState, move1)).thenReturn(123);
         when(moveScorer.scoreMove(currentState, move2)).thenReturn(123);
 
-        List<IMove> moves = moveMoveScoreStrategy.getBestMoves(currentState, playerKey).collect(Collectors.toList());
+        Set<IMove> moves = moveMoveScoreStrategy.getBestMoves(currentState, playerKey);
 
         assertEquals(2, moves.size());
         assertEquals(ImmutableSet.copyOf(moves), ImmutableSet.of(move1, move2));
@@ -89,7 +88,7 @@ public class MoveScoreStrategyTest {
         when(moveScorer.scoreMove(currentState, move1)).thenReturn(123);
         when(moveScorer.scoreMove(currentState, move2)).thenReturn(321);
 
-        List<IMove> moves = moveMoveScoreStrategy.getBestMoves(currentState, playerKey).collect(Collectors.toList());
+        Set<IMove> moves = moveMoveScoreStrategy.getBestMoves(currentState, playerKey);
 
         assertEquals(1, moves.size());
         assertTrue(moves.contains(move2));
@@ -105,7 +104,7 @@ public class MoveScoreStrategyTest {
         when(moveScorer.scoreMove(currentState, move1)).thenReturn(123);
         when(moveScorer.scoreMove(currentState, move2)).thenThrow(InvalidMoveException.INSTANCE);
 
-        List<IMove> moves = moveMoveScoreStrategy.getBestMoves(currentState, playerKey).collect(Collectors.toList());
+        Set<IMove> moves = moveMoveScoreStrategy.getBestMoves(currentState, playerKey);
 
         assertEquals(1, moves.size());
         assertTrue(moves.contains(move1));

@@ -11,9 +11,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
+import java.util.Collections;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -36,9 +37,9 @@ public class MinMaxStrategy<S, M> implements IStrategy<S, TwoPlayerKey, M> {
 
     @Nonnull
     @Override
-    public Stream<M> getBestMoves(@Nonnull S board, @Nonnull final TwoPlayerKey maximizingPlayer) {
+    public Set<M> getBestMoves(@Nonnull S board, @Nonnull final TwoPlayerKey maximizingPlayer) {
         if (gameOverTester.isGameOver(board)) {
-            return Stream.empty();
+            return Collections.EMPTY_SET;
         }
 
         MaxScoreMoves<M> bestMoves = new MaxScoreMoves<>();
@@ -56,7 +57,7 @@ public class MinMaxStrategy<S, M> implements IStrategy<S, TwoPlayerKey, M> {
                 throw new RuntimeException(e);
             }
         });
-        return bestMoves.getMoves().stream();
+        return bestMoves.getMoves();
     }
 
     private int minimax(S board, int depth, final boolean isMaximiser, final TwoPlayerKey maximizingPlayer) {

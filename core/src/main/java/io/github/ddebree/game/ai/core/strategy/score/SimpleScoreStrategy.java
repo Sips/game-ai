@@ -9,7 +9,7 @@ import io.github.ddebree.game.ai.core.strategy.IStrategy;
 
 import javax.annotation.Nonnull;
 
-import java.util.stream.Stream;
+import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -40,7 +40,7 @@ public class SimpleScoreStrategy<S, P, M> implements IStrategy<S, P, M> {
 
     @Nonnull
     @Override
-    public Stream<M> getBestMoves(@Nonnull S state, P playerKey) {
+    public Set<M> getBestMoves(@Nonnull S state, P playerKey) {
         final MinMaxScore.Builder<M> results = MinMaxScore.builder();
         moveFactory.getMoves(state, playerKey).forEach(
                 move -> {
@@ -51,7 +51,7 @@ public class SimpleScoreStrategy<S, P, M> implements IStrategy<S, P, M> {
                     }
                 }
         );
-        return results.build().getBestMoves().stream();
+        return results.build().getBestMoves();
     }
 
 }

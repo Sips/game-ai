@@ -1,7 +1,7 @@
 package io.github.ddebree.game.ai.core.score;
 
 import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ListMultimap;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -14,14 +14,14 @@ public class MinMaxScore<M> {
 
     private static final Logger LOG = LogManager.getLogger(MinMaxScore.class);
 
-    private final ImmutableList<M> bestMoves;
+    private final ImmutableSet<M> bestMoves;
 
     //Private since must use the builder method...
-    private MinMaxScore(ImmutableList<M> bestMoves) {
+    private MinMaxScore(ImmutableSet<M> bestMoves) {
         this.bestMoves = bestMoves;
     }
 
-    public ImmutableList<M> getBestMoves() {
+    public ImmutableSet<M> getBestMoves() {
         return bestMoves;
     }
 
@@ -63,7 +63,7 @@ public class MinMaxScore<M> {
         @Nonnull
         public MinMaxScore<M> build() {
             if (scores.isEmpty()) {
-                return new MinMaxScore<>(ImmutableList.of());
+                return new MinMaxScore<>(ImmutableSet.of());
             }
 
             ListMultimap<Integer, M> groupedScores = ArrayListMultimap.create();
@@ -73,7 +73,7 @@ public class MinMaxScore<M> {
 
             Integer max = groupedScores.keySet().stream().reduce(Integer::max).get();
 
-            ImmutableList<M> topMoves = ImmutableList.copyOf(groupedScores.get(max));
+            ImmutableSet<M> topMoves = ImmutableSet.copyOf(groupedScores.get(max));
 
             LOG.info("Found best score to be " + max + ", moves that result in this is: " + topMoves);
 

@@ -1,10 +1,10 @@
 package io.github.ddebree.game.ai.core.strategy.list;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import io.github.ddebree.game.ai.core.strategy.IStrategy;
 
@@ -30,25 +30,25 @@ public class ConcurrentStrategyList<S, P, M> extends StrategyList<S, P, M> {
 
     @Nonnull
     @Override
-    public Stream<M> getBestMoves(@Nonnull final S state, @Nonnull final P playerKey) {
+    public Set<M> getBestMoves(@Nonnull final S state, @Nonnull final P playerKey) {
         checkNotNull(state);
         checkNotNull(playerKey);
 
-        List<Future<Stream<M>>> results = new ArrayList<>(strategies.size());
+        List<Future<Set<M>>> results = new ArrayList<>(strategies.size());
         for (IStrategy<S, P, M> strategy : strategies) {
             results.add(executorService.submit(strategy.asCallable(state, playerKey)));
         }
-        for (Future<Stream<M>> result : results) {
+        for (Future<Set<M>> result : results) {
             try {
-                List<M> val = result.get().collect(Collectors.toList());
+                Set<M> val = result.get();
                 if ( ! val.isEmpty()) {
-                    return val.stream();
+                    return val;
                 }
             } catch (InterruptedException | ExecutionException ignored) {
             }
         }
         
-        return Stream.empty();
+        return Collections.EMPTY_SET;
     }
 
 }

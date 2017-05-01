@@ -1,8 +1,8 @@
 package io.github.ddebree.game.ai.core.strategy;
 
 import javax.annotation.Nonnull;
+import java.util.Set;
 import java.util.concurrent.Callable;
-import java.util.stream.Stream;
 
 /**
  * A basic representation of a player's strategy.
@@ -23,7 +23,7 @@ public interface IStrategy<S, P, M> {
      * @return A stream of moves that would result in the best outcome for the provided player
      */
     @Nonnull
-    Stream<M> getBestMoves(@Nonnull S state, @Nonnull P playerKey);
+    Set<M> getBestMoves(@Nonnull S state, @Nonnull P playerKey);
 
     /**
      * Get a callable representation of this strategy
@@ -32,7 +32,7 @@ public interface IStrategy<S, P, M> {
      * @param playerKey The player to determine the best current state for
      * @return A stream of moves that would result in the best outcome for the provided player
      */
-    default Callable<Stream<M>> asCallable(@Nonnull final S state, @Nonnull final P playerKey) {
+    default Callable<Set<M>> asCallable(@Nonnull final S state, @Nonnull final P playerKey) {
         return () -> getBestMoves(state, playerKey);
     }
 }

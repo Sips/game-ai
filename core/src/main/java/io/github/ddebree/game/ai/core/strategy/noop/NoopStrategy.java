@@ -3,7 +3,8 @@ package io.github.ddebree.game.ai.core.strategy.noop;
 import io.github.ddebree.game.ai.core.strategy.IStrategy;
 
 import javax.annotation.Nonnull;
-import java.util.stream.Stream;
+import java.util.Collections;
+import java.util.Set;
 
 /**
  * The do nothing strategy
@@ -16,8 +17,8 @@ public class NoopStrategy<S, P, M> implements IStrategy<S, P, M> {
 
     @Nonnull
     @Override
-    public Stream<M> getBestMoves(@Nonnull S state, P playerKey) {
-        return Stream.empty();
+    public Set<M> getBestMoves(@Nonnull S state, P playerKey) {
+        return Collections.EMPTY_SET;
     }
 
 }

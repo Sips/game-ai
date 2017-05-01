@@ -6,7 +6,8 @@ import io.github.ddebree.game.ai.core.strategy.IStrategy;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import java.util.stream.Stream;
+import java.util.Collections;
+import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -36,11 +37,11 @@ public class FixedMoveStrategy<S, P, M> implements IStrategy<S, P, M> {
 
     @Nonnull
     @Override
-    public Stream<M> getBestMoves(@Nonnull S state, P playerKey) {
+    public Set<M> getBestMoves(@Nonnull S state, @Nonnull P playerKey) {
         if (hasNextStateTester == null || hasNextStateTester.isValidMove(state, playerKey, defaultMove)) {
-            return Stream.of(defaultMove);
+            return Collections.singleton(defaultMove);
         } else {
-            return Stream.empty();
+            return Collections.EMPTY_SET;
         }
     }
     

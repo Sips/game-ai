@@ -1,7 +1,7 @@
 package io.github.ddebree.game.ai.core.move.picker;
 
 import javax.annotation.Nonnull;
-import java.util.stream.Stream;
+import java.util.Set;
 
 /**
  * Pick any move that is read from the move stream
@@ -12,8 +12,8 @@ import java.util.stream.Stream;
 public class AnyMovePicker<S, M> implements IMovePicker<S, M> {
 
     @Nonnull
-    public M pickAMove(S state, Stream<M> bestMoves) {
-        return bestMoves.findAny()
+    public M pickAMove(S state, Set<M> bestMoves) {
+        return bestMoves.stream().findAny()
                 .orElseThrow(() -> new RuntimeException("No moves to select from!"));
     }
 }
