@@ -1,17 +1,16 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
         <groupId>io.spring.platform</groupId>
         <artifactId>platform-bom</artifactId>
         <version>Brussels-SR2</version>
-        <relativePath/>
+        <relativePath />
     </parent>
 
     <groupId>io.github.ddebree</groupId>
     <artifactId>game-ai-parent</artifactId>
-    <version>0.1.1-SNAPSHOT</version>
+    <version>0.1.2-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>Game AI Parent Pom</name>
@@ -31,9 +30,8 @@
 
     <scm>
         <url>https://github.com/ddebree/game-ai</url>
-        <connection>scm:git:git@github.com:ddebree/game-ai.git</connection>
-        <developerConnection>scm:git:git@github.com:ddebree/game-ai.git</developerConnection>
-        <tag>HEAD</tag>
+        <connection>scm:git:https://github.com/ddebree/game-ai</connection>
+        <developerConnection>scm:git:https://github.com/ddebree/game-ai</developerConnection>
     </scm>
     <issueManagement>
         <url>https://github.com/ddebree/game-ai</url>
@@ -84,6 +82,13 @@
                     <serverId>ossrh</serverId>
                     <nexusUrl>https://oss.sonatype.org/</nexusUrl>
                     <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <configuration>
+                    <tagNameFormat>@{project.version}</tagNameFormat>
                 </configuration>
             </plugin>
         </plugins>
