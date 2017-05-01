@@ -13,17 +13,12 @@ then
     exit 1
 fi
 
-if [ "$TRAVIS_BRANCH" = 'master' ] && [ "$TRAVIS_PULL_REQUEST" == 'false' ]; then
-    openssl aes-256-cbc -K $encrypted_a65b4a5a53ac_key -iv $encrypted_a65b4a5a53ac_iv -in .travis/codesigning.asc.enc -out .travis/codesigning.asc -d
-    gpg --fast-import .travis/codesigning.asc
-fi
+openssl aes-256-cbc -K $encrypted_a65b4a5a53ac_key -iv $encrypted_a65b4a5a53ac_iv -in .travis/codesigning.asc.enc -out .travis/codesigning.asc -d
+gpg --fast-import .travis/codesigning.asc
 
 if [ ! -z "$TRAVIS_TAG" ]
 then
     echo "on a tag -> set pom.xml <version> to $TRAVIS_TAG"
-
-    openssl aes-256-cbc -K $encrypted_a65b4a5a53ac_key -iv $encrypted_a65b4a5a53ac_iv -in .travis/codesigning.asc.enc -out .travis/codesigning.asc -d
-    gpg --fast-import .travis/codesigning.asc
 
     mvn --settings .travis/settings.xml org.codehaus.mojo:versions-maven-plugin:2.1:set -DnewVersion=$TRAVIS_TAG 1>/dev/null 2>/dev/null
 else
