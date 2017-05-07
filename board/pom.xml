@@ -9,7 +9,7 @@
     </parent>
 
     <artifactId>game-ai-board</artifactId>
-    <name>Game AI Board</name>
+    <name>Game AI - Board</name>
 
     <dependencies>
         <dependency>

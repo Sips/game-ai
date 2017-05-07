@@ -9,7 +9,7 @@
     </parent>
 
     <artifactId>game-ai-concurrent</artifactId>
-    <name>Game AI Concurrent</name>
+    <name>Game AI - Concurrent</name>
 
     <dependencies>
         <dependency>

@@ -9,7 +9,7 @@
     </parent>
 
     <artifactId>game-ai-core</artifactId>
-    <name>Game AI Core</name>
+    <name>Game AI - Core</name>
 
     <dependencies>
         <dependency>
