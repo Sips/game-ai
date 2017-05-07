@@ -1,5 +1,6 @@
 package io.github.ddebree.game.ai.core.executor;
 
+import com.google.common.base.Stopwatch;
 import io.github.ddebree.game.ai.core.exception.InvalidMoveException;
 import io.github.ddebree.game.ai.core.player.TwoPlayerKey;
 import io.github.ddebree.game.ai.core.executor.gameover.IGameOverTester;
@@ -17,6 +18,8 @@ public class TurnBasedLoopingGameExecutor<S, M> implements Runnable {
 
     private static final Logger LOG = LogManager.getLogger(TurnBasedLoopingGameExecutor.class);
 
+    private final Stopwatch stopwatch = Stopwatch.createStarted();
+
     private Supplier<? extends S> stateReader;
     private Supplier<TwoPlayerKey> firstPlayerSelector = () -> TwoPlayerKey.PLAYER_1;
     private INextStateBuilder<S, TwoPlayerKey, M> nextStateBuilder;
@@ -28,8 +31,6 @@ public class TurnBasedLoopingGameExecutor<S, M> implements Runnable {
         checkNotNull(stateReader);
         checkNotNull(nextStateBuilder);
 
-        long startTime = System.currentTimeMillis();
-
         S state = stateReader.get();
 
         TwoPlayerKey turn = firstPlayerSelector.get();
@@ -37,6 +38,7 @@ public class TurnBasedLoopingGameExecutor<S, M> implements Runnable {
         int loopCount = 0;
 
         while ( ! gameOverTester.isGameOver(state) && loopCount < loopLimit) {
+            Stopwatch loopStopwatch = Stopwatch.createStarted();
             loopCount++;
 
             System.out.println();
@@ -54,6 +56,7 @@ public class TurnBasedLoopingGameExecutor<S, M> implements Runnable {
             }
 
             turn = turn.otherPlayer();
+            LOG.info("Loop completed in {}", loopStopwatch);
         }
 
         System.out.println("\n###########################################\nFinal Board state\n");
@@ -68,8 +71,7 @@ public class TurnBasedLoopingGameExecutor<S, M> implements Runnable {
             System.out.println("It's a draw!");
         }
 
-        long runTime = System.currentTimeMillis() - startTime;
-        LOG.info("Game executor finished in " + runTime + " ms.");
+        LOG.info("Game executor finished in {}", stopwatch);
     }
 
     public TurnBasedLoopingGameExecutor<S, M> withFirstPlayerSelector(Supplier<TwoPlayerKey> firstPlayerSelector) {

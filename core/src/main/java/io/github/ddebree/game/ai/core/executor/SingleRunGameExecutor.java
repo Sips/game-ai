@@ -1,5 +1,6 @@
 package io.github.ddebree.game.ai.core.executor;
 
+import com.google.common.base.Stopwatch;
 import io.github.ddebree.game.ai.core.executor.player.PlayerExecutor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -14,7 +15,7 @@ public class SingleRunGameExecutor<S, P, M> implements Runnable {
 
     private static final Logger LOG = LogManager.getLogger(SingleRunGameExecutor.class);
 
-    private final long startTime = System.currentTimeMillis();
+    private final Stopwatch stopwatch = Stopwatch.createStarted();
 
     private Supplier<S> stateReader;
     private PlayerExecutor<S, P, M> player;
@@ -35,12 +36,11 @@ public class SingleRunGameExecutor<S, P, M> implements Runnable {
 
         M bestMove = player.getMove(state);
 
-        LOG.info("Player picked the best move to be: " + bestMove);
+        LOG.info("Player picked the best move to be: {}", bestMove);
 
         stateWriter.accept(bestMove);
 
-        long runTime = System.currentTimeMillis() - startTime;
-        LOG.info("Single Game run finished in " + runTime + " ms.");
+        LOG.info("Single Game run finished in {}", stopwatch);
     }
 
     public SingleRunGameExecutor<S, P, M> withStateReader(@Nonnull Supplier<S> stateReader) {
