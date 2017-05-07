@@ -30,7 +30,13 @@ public class Point implements Comparable<Point> {
         }
         return point;
     }
-    
+
+    public static Point random(int size) {
+        int x = (int) (Math.random() * size);
+        int y = (int) (Math.random() * size);
+        return Point.at(x, y);
+    }
+
     private Point(int x, int y) {
         this.x = x;
         this.y = y;
@@ -42,6 +48,12 @@ public class Point implements Comparable<Point> {
 
     public int getY() {
         return y;
+    }
+
+    public double distanceTo(Point otherPoint) {
+        double deltaX = x - otherPoint.x;
+        double deltaY = y - otherPoint.y;
+        return Math.sqrt( (deltaX * deltaX) + (deltaY * deltaY) );
     }
 
     @Override

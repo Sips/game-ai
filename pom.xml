@@ -25,15 +25,17 @@
         <module>core</module>
         <module>board</module>
         <module>concurrent</module>
+
         <module>tictactoe</module>
+        <module>travelling-salesman</module>
     </modules>
 
     <scm>
         <url>https://github.com/ddebree/game-ai</url>
         <connection>scm:git:https://github.com/ddebree/game-ai</connection>
         <developerConnection>scm:git:https://github.com/ddebree/game-ai</developerConnection>
-      <tag>HEAD</tag>
-  </scm>
+        <tag>HEAD</tag>
+    </scm>
     <issueManagement>
         <url>https://github.com/ddebree/game-ai</url>
     </issueManagement>
