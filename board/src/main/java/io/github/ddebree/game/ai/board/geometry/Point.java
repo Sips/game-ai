@@ -56,6 +56,12 @@ public class Point implements Comparable<Point> {
         return Math.sqrt( (deltaX * deltaX) + (deltaY * deltaY) );
     }
 
+    public int manhattanDistance(Point otherPoint) {
+        int deltaX = x - otherPoint.x;
+        int deltaY = y - otherPoint.y;
+        return Math.abs(deltaX) + Math.abs(deltaY);
+    }
+
     @Override
     public int hashCode() {
         int hash = 3;
