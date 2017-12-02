@@ -25,6 +25,7 @@
         <module>core</module>
         <module>board</module>
         <module>concurrent</module>
+        <module>graph</module>
 
         <module>tictactoe</module>
         <module>travelling-salesman</module>
