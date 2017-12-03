@@ -23,8 +23,9 @@ public class GeneticAlgorithm<G> {
     private double crossoverRate = 0.05;
     private double mutationRate = 0.015;
 
+    private boolean elitismSelection = true;
     private int numberOfGenes = -1;
-    private int maxFitness = Integer.MAX_VALUE;
+    private int sufficientFitness = Integer.MAX_VALUE;
     private int numberOfGenerations = -1;
     private GeneFactory<G> geneFactory;
     private ToIntFunction<List<G>> fitnessFunction;
@@ -46,7 +47,7 @@ public class GeneticAlgorithm<G> {
         for (int generationCount = 0; generationCount < numberOfGenerations; generationCount++) {
             int fitness = currentFittest.getFitness();
             LOG.debug("Generation: {}, Fittest: {} (Fittest: {}", generationCount, currentFittest, fitness);
-            if (fitness >= maxFitness) {
+            if (fitness >= sufficientFitness) {
                 break;
             }
             population = evolvePopulation(population);
@@ -77,6 +78,11 @@ public class GeneticAlgorithm<G> {
         return this;
     }
 
+    public GeneticAlgorithm<G> withElitismSelection(boolean elitismSelection) {
+        this.elitismSelection = elitismSelection;
+        return this;
+    }
+
     public GeneticAlgorithm<G> withNumberOfGenes(int numberOfGenes) {
         this.numberOfGenes = numberOfGenes;
         return this;
@@ -87,8 +93,8 @@ public class GeneticAlgorithm<G> {
         return this;
     }
 
-    public GeneticAlgorithm<G> withMaximumFitness(int maxFitness) {
-        this.maxFitness = maxFitness;
+    public GeneticAlgorithm<G> withSufficientFitness(int sufficientFitness) {
+        this.sufficientFitness = sufficientFitness;
         return this;
     }
 
@@ -104,22 +110,20 @@ public class GeneticAlgorithm<G> {
 
     private Population evolvePopulation(Population population) {
 
-        List<Individual> newPopulation = new ArrayList<>(population.individuals.size());
+        List<Individual> newPopulation = new ArrayList<>(populationSize);
 
-        for (int index = 0; index < population.individuals.size(); ++index) {
-            Individual firstParent = randomSelection(population);
-            Individual secondParent = randomSelection(population);
+        if (elitismSelection) {
+            newPopulation.add(population.getFittest());
+        }
 
-            Individual child = crossoverAndMutate(firstParent, secondParent);
+        while (newPopulation.size() < populationSize) {
+            Individual firstParent = population.getFittestInSubPopulation(tournamentSize);
+            Individual secondParent = population.getFittestInSubPopulation(tournamentSize);
 
-            newPopulation.add(child);
+            newPopulation.add(crossoverAndMutate(firstParent, secondParent));
         }
 
         return new Population(newPopulation);
-    }
-
-    private Individual randomSelection(Population population) {
-        return population.getFittestInSubPopulation(tournamentSize);
     }
 
     private Individual crossoverAndMutate(Individual firstParent, Individual secondParent) {

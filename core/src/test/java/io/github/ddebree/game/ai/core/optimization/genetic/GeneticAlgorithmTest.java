@@ -16,7 +16,7 @@ public class GeneticAlgorithmTest {
 
         List<Integer> fittestIndividual = GeneticAlgorithm.<Integer>aGeneticAlgorithmSearch()
                 .withNumberOfGenes(NUMBER_OF_GENES)
-                .withMaximumFitness(NUMBER_OF_GENES)
+                .withSufficientFitness(NUMBER_OF_GENES)
                 .withNumberOfGenerations(600)
 
                 .withFitnessFunction(new ToIntFunction<List<Integer>>() {
