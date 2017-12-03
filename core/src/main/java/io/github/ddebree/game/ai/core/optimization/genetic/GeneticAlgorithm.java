@@ -8,11 +8,22 @@ import org.apache.logging.log4j.Logger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.function.ToIntFunction;
+import java.util.function.ToDoubleFunction;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 
+/**
+ * "Genetic algorithm (GA) is a metaheuristic inspired by the process of natural selection that belongs to the
+ * larger class of evolutionary algorithms (EA). Genetic algorithms are commonly used to generate high-quality
+ * solutions to optimization and search problems by relying on bio-inspired operators such as mutation, crossover
+ * and selection" (Wikipedia)
+ *
+ * A genetic algorithm is a type of algorithm designed to find the optimal solution to a problem by progressively
+ * applying concepts such as crossover and mutation to an input into a problem.
+ *
+ * @param <G>
+ */
 public class GeneticAlgorithm<G> {
 
     private static final Logger LOG = LogManager.getLogger(RandomMovePicker.class);
@@ -28,7 +39,7 @@ public class GeneticAlgorithm<G> {
     private int sufficientFitness = Integer.MAX_VALUE;
     private int numberOfGenerations = -1;
     private GeneFactory<G> geneFactory;
-    private ToIntFunction<List<G>> fitnessFunction;
+    private ToDoubleFunction<List<G>> fitnessFunction;
 
     public static <G1> GeneticAlgorithm<G1> aGeneticAlgorithmSearch() {
         return new GeneticAlgorithm<>();
@@ -45,7 +56,7 @@ public class GeneticAlgorithm<G> {
         Individual currentFittest = population.getFittest();
 
         for (int generationCount = 0; generationCount < numberOfGenerations; generationCount++) {
-            int fitness = currentFittest.getFitness();
+            double fitness = currentFittest.getFitness();
             LOG.debug("Generation: {}, Fittest: {} (Fittest: {}", generationCount, currentFittest, fitness);
             if (fitness >= sufficientFitness) {
                 break;
@@ -103,7 +114,7 @@ public class GeneticAlgorithm<G> {
         return this;
     }
 
-    public GeneticAlgorithm<G> withFitnessFunction(ToIntFunction<List<G>> fitnessFunction) {
+    public GeneticAlgorithm<G> withFitnessFunction(ToDoubleFunction<List<G>> fitnessFunction) {
         this.fitnessFunction = fitnessFunction;
         return this;
     }
@@ -159,10 +170,14 @@ public class GeneticAlgorithm<G> {
         }
 
         private Individual getFittest() {
-            Individual fittestIndividual = individuals.get(0);
+            Individual fittestIndividual = null;
+            double currentBestFitness = 0;
             for (Individual individual : individuals) {
-                if (fittestIndividual.getFitness() <= individual.getFitness()) {
+                double newFitness = individual.getFitness();
+                if (fittestIndividual == null
+                        || currentBestFitness <= newFitness) {
                     fittestIndividual = individual;
+                    currentBestFitness = newFitness;
                 }
             }
             return fittestIndividual;
@@ -197,8 +212,8 @@ public class GeneticAlgorithm<G> {
             this.genes = ImmutableList.copyOf(genes);
         }
 
-        int getFitness() {
-            return fitnessFunction.applyAsInt(genes);
+        double getFitness() {
+            return fitnessFunction.applyAsDouble(genes);
         }
 
         @Override

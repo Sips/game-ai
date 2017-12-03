@@ -4,6 +4,7 @@ import org.junit.Test;
 
 import java.util.List;
 import java.util.Random;
+import java.util.function.ToDoubleFunction;
 import java.util.function.ToIntFunction;
 
 public class GeneticAlgorithmTest {
@@ -19,9 +20,9 @@ public class GeneticAlgorithmTest {
                 .withSufficientFitness(NUMBER_OF_GENES)
                 .withNumberOfGenerations(600)
 
-                .withFitnessFunction(new ToIntFunction<List<Integer>>() {
+                .withFitnessFunction(new ToDoubleFunction<List<Integer>>() {
                     @Override
-                    public int applyAsInt(List<Integer> value) {
+                    public double applyAsDouble(List<Integer> value) {
                         int fitness = 0;
                         for (int i = 0; i < NUMBER_OF_GENES; i++) {
                             if (value.get(i) == (i % 10)) {
