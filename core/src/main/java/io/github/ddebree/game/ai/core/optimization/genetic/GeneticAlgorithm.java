@@ -140,17 +140,14 @@ public class GeneticAlgorithm<G> {
     private Individual crossoverAndMutate(Individual firstParent, Individual secondParent) {
         List<G> newSolution = new ArrayList<>(numberOfGenes);
         for (int geneIndex = 0; geneIndex < numberOfGenes; ++geneIndex) {
-            G gene;
-            if (ThreadLocalRandom.current().nextDouble() <= crossoverRate) {
-                gene = firstParent.genes.get(geneIndex);
-            } else {
-                gene = secondParent.genes.get(geneIndex);
-            }
+            //If we are going to mutate, do that first, otherwise select from one of the two parents:
             if (ThreadLocalRandom.current().nextDouble() <= mutationRate) {
-                gene = geneFactory.getRandomGene(geneIndex);
+                newSolution.add(geneFactory.getRandomGene(geneIndex));
+            } else if (ThreadLocalRandom.current().nextDouble() <= crossoverRate) {
+                newSolution.add(firstParent.genes.get(geneIndex));
+            } else {
+                newSolution.add(secondParent.genes.get(geneIndex));
             }
-            newSolution.add(gene);
-
         }
         return new Individual(newSolution);
     }
