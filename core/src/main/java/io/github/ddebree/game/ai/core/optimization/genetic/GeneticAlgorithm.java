@@ -22,6 +22,10 @@ import static com.google.common.base.Preconditions.checkState;
  * A genetic algorithm is a type of algorithm designed to find the optimal solution to a problem by progressively
  * applying concepts such as crossover and mutation to an input into a problem.
  *
+ * The algorithm will create a population of the requested size. It will then find the fittest individual within the
+ * population. This is the current best solution.
+ * The algorithm judges fitness through the use of a fitness function.
+ *
  * @param <G>
  */
 public class GeneticAlgorithm<G> {
