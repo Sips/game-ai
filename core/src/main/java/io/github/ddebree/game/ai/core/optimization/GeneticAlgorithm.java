@@ -1,4 +1,4 @@
-package io.github.ddebree.game.ai.core.optimization.genetic;
+package io.github.ddebree.game.ai.core.optimization;
 
 import com.google.common.collect.ImmutableList;
 import io.github.ddebree.game.ai.core.move.picker.RandomMovePicker;
@@ -28,7 +28,7 @@ import static com.google.common.base.Preconditions.checkState;
  *
  * @param <G>
  */
-public class GeneticAlgorithm<G> {
+public class GeneticAlgorithm<G> implements SolutionFinder<List<G>> {
 
     private static final Logger LOG = LogManager.getLogger(RandomMovePicker.class);
 
@@ -43,17 +43,18 @@ public class GeneticAlgorithm<G> {
     private int sufficientFitness = Integer.MAX_VALUE;
     private int numberOfGenerations = -1;
     private GeneFactory<G> geneFactory;
+
     private ToDoubleFunction<List<G>> fitnessFunction;
 
     public static <G1> GeneticAlgorithm<G1> aGeneticAlgorithmSearch() {
         return new GeneticAlgorithm<>();
     }
 
-    public List<G> findFittestIndivdual() {
+    public List<G> findMaximumSolution(ToDoubleFunction<List<G>> fitnessFunction) {
         checkState(numberOfGenes > 0);
         checkState(numberOfGenerations > 0);
         checkNotNull(geneFactory);
-        checkNotNull(fitnessFunction);
+        this.fitnessFunction = checkNotNull(fitnessFunction);
 
         Population population = new Population(populationSize);
 
@@ -115,11 +116,6 @@ public class GeneticAlgorithm<G> {
 
     public GeneticAlgorithm<G> withGeneFactory(GeneFactory<G> geneFactory) {
         this.geneFactory = geneFactory;
-        return this;
-    }
-
-    public GeneticAlgorithm<G> withFitnessFunction(ToDoubleFunction<List<G>> fitnessFunction) {
-        this.fitnessFunction = fitnessFunction;
         return this;
     }
 

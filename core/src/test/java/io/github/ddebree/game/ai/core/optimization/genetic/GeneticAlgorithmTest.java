@@ -1,11 +1,11 @@
 package io.github.ddebree.game.ai.core.optimization.genetic;
 
+import io.github.ddebree.game.ai.core.optimization.GeneticAlgorithm;
 import org.junit.Test;
 
 import java.util.List;
 import java.util.Random;
 import java.util.function.ToDoubleFunction;
-import java.util.function.ToIntFunction;
 
 public class GeneticAlgorithmTest {
 
@@ -19,8 +19,13 @@ public class GeneticAlgorithmTest {
                 .withNumberOfGenes(NUMBER_OF_GENES)
                 .withSufficientFitness(NUMBER_OF_GENES)
                 .withNumberOfGenerations(600)
-
-                .withFitnessFunction(new ToDoubleFunction<List<Integer>>() {
+                .withGeneFactory(new GeneticAlgorithm.GeneFactory<Integer>() {
+                    @Override
+                    public Integer getRandomGene(int index) {
+                        return RANDOM_GENERATOR.nextInt(10);
+                    }
+                })
+                .findMaximumSolution(new ToDoubleFunction<List<Integer>>() {
                     @Override
                     public double applyAsDouble(List<Integer> value) {
                         int fitness = 0;
@@ -31,14 +36,7 @@ public class GeneticAlgorithmTest {
                         }
                         return fitness;
                     }
-                })
-                .withGeneFactory(new GeneticAlgorithm.GeneFactory<Integer>() {
-                    @Override
-                    public Integer getRandomGene(int index) {
-                        return RANDOM_GENERATOR.nextInt(10);
-                    }
-                })
-                .findFittestIndivdual();
+                });
 
         System.out.println("Solution found:");
         System.out.println(fittestIndividual);
