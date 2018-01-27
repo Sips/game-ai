@@ -28,7 +28,6 @@
         <module>graph</module>
 
         <module>tictactoe</module>
-        <module>travelling-salesman</module>
     </modules>
 
     <scm>

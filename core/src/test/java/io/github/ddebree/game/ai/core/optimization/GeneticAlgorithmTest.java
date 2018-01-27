@@ -1,6 +1,5 @@
-package io.github.ddebree.game.ai.core.optimization.genetic;
+package io.github.ddebree.game.ai.core.optimization;
 
-import io.github.ddebree.game.ai.core.optimization.GeneticAlgorithm;
 import org.junit.Test;
 
 import java.util.List;
